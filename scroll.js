@@ -41,7 +41,7 @@ $(function () {
         videoElement[0].currentTime = (currentPosition * pixelDuration) / 1000;
         videoElement[0].pause();
 
-    }, 100);
+    }, 40);
 
 });
 
