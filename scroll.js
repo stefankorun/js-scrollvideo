@@ -1,7 +1,7 @@
 $(function () {
     // ---- Values you can tweak: ----
     var accelamount = 0.01; //How fast the video will try to catch up with the target position. 1 = instantaneous, 0 = do nothing.
-    var bounceamount = 0.9; //value from 0 to 1 for how much backlash back and forth you want in the easing. 0 = no bounce whatsoever, 1 = lots and lots of bounce
+    var bounceamount = 0.8; //value from 0 to 1 for how much backlash back and forth you want in the easing. 0 = no bounce whatsoever, 1 = lots and lots of bounce
 
     var videoWrapper = $('.videoWrapper');
     var videoElement = videoWrapper.find('video');
