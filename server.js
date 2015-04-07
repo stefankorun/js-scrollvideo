@@ -1,5 +1,12 @@
 #!/bin/env node
 //  OpenShift sample Node application
+
+
+
+return;
+
+
+
 var express = require('express');
 var fs      = require('fs');
 
