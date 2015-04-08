@@ -47,7 +47,7 @@ $(function () {
 
         //update video playback
         videoElement[0].currentTime = (currentPosition * pixelDuration) / 1000;
-    }, 60);
+    }, 100);
 
 });
 
