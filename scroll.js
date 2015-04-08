@@ -1,7 +1,7 @@
 $(function () {
     // ---- Values you can tweak: ----
-    var accelamount = 0.01; //How fast the video will try to catch up with the target position. 1 = instantaneous, 0 = do nothing.
-    var bounceamount = 0.8; //value from 0 to 1 for how much backlash back and forth you want in the easing. 0 = no bounce whatsoever, 1 = lots and lots of bounce
+    var accelamount = 0.05; //How fast the video will try to catch up with the target position. 1 = instantaneous, 0 = do nothing.
+    var bounceamount = 0.9; //value from 0 to 1 for how much backlash back and forth you want in the easing. 0 = no bounce whatsoever, 1 = lots and lots of bounce
 
     var videoWrapper = $('.videoWrapper');
     var videoElement = videoWrapper.find('video');
@@ -25,23 +25,29 @@ $(function () {
 
     setInterval(function () {
 
-        //Accelerate towards the target:
-        accel += (targetPosition - currentPosition) * accelamount;
+        // Accelerate towards the target
+        var distance = targetPosition - currentPosition;
+        accel += distance * accelamount;
 
-        //clamp the acceleration so that it doesnt go too fast
-        if (accel > 1) accel = 1;
-        if (accel < -1) accel = -1;
+        // clamp the acceleration so that it doesnt go too fast
+        var accMax = 100;
+        if (accel > accMax) accel = accMax;
+        if (accel < -accMax) accel = -accMax;
 
         console.log(targetPosition, currentPosition, accel);
 
-        //move the video scroll position according to the acceleration and how much bouncing you selected:
-        currentPosition = (currentPosition + accel) * (bounceamount) + (targetPosition * (1 - bounceamount));
+        // check if next tick is skipping the target frame and wrap to it if true
+        if (Math.abs(accel) > Math.abs(distance)) {
+            currentPosition = targetPosition;
+            accel = 0;
+        } else {
+            currentPosition = (currentPosition + accel);
+        }
+
 
         //update video playback
         videoElement[0].currentTime = (currentPosition * pixelDuration) / 1000;
-        videoElement[0].pause();
-
-    }, 40);
+    }, 60);
 
 });
 
