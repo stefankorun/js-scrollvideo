@@ -1,15 +1,14 @@
 $(function () {
-    // ---- Values you can tweak: ----
     var accelamount = 0.05; //How fast the video will try to catch up with the target position. 1 = instantaneous, 0 = do nothing.
-    var bounceamount = 0.9; //value from 0 to 1 for how much backlash back and forth you want in the easing. 0 = no bounce whatsoever, 1 = lots and lots of bounce
 
     var videoWrapper = $('.videoWrapper');
     var videoElement = videoWrapper.find('video');
+    var intervalId = null;
 
     var pixelDuration = 3; // miliseconds per pixel
     var targetPosition = 0;
     var currentPosition = 0;
-    var accel = 0;
+    var velocity = 0;
 
 
     videoElement.on('loadedmetadata', function () {
@@ -18,36 +17,40 @@ $(function () {
         var videoDuration = (this.duration + pixelDuration) * 1000;
         videoWrapper.height(videoDuration / pixelDuration);
     });
+
     $(window).scroll(function () {
+        if (!intervalId) {
+            intervalId = setInterval(moveVideo, 100);
+        }
         targetPosition = this.scrollY;
     });
 
 
-    setInterval(function () {
+    function moveVideo() {
 
         // Accelerate towards the target
         var distance = targetPosition - currentPosition;
-        accel += distance * accelamount;
+        velocity += distance * accelamount;
 
         // clamp the acceleration so that it doesnt go too fast
         var accMax = 100;
-        if (accel > accMax) accel = accMax;
-        if (accel < -accMax) accel = -accMax;
-
-        console.log(targetPosition, currentPosition, accel);
+        if (velocity > accMax) velocity = accMax;
+        if (velocity < -accMax) velocity = -accMax;
 
         // check if next tick is skipping the target frame and wrap to it if true
-        if (Math.abs(accel) > Math.abs(distance)) {
+        if (Math.abs(velocity) > Math.abs(distance)) {
             currentPosition = targetPosition;
-            accel = 0;
+            clearInterval(intervalId);
+            intervalId = null;
+            velocity = 0;
         } else {
-            currentPosition = (currentPosition + accel);
+            currentPosition = (currentPosition + velocity);
         }
 
-
         //update video playback
+        console.log(targetPosition, currentPosition, velocity);
         videoElement[0].currentTime = (currentPosition * pixelDuration) / 1000;
-    }, 100);
+    }
 
 });
 
