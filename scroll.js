@@ -32,24 +32,27 @@ $(function () {
         var distance = targetPosition - currentPosition;
         velocity += distance * accelamount;
 
-        // clamp the acceleration so that it doesnt go too fast
+        // clamp the acceleration so that it doesn't go too fast
         var accMax = 100;
         if (velocity > accMax) velocity = accMax;
         if (velocity < -accMax) velocity = -accMax;
 
-        // check if next tick is skipping the target frame and wrap to it if true
+        // check if next tick is skipping the target frame
         if (Math.abs(velocity) > Math.abs(distance)) {
+            // match positions
+            velocity = 0;
             currentPosition = targetPosition;
+
+            // pause scroll change checking
             clearInterval(intervalId);
             intervalId = null;
-            velocity = 0;
         } else {
             currentPosition = (currentPosition + velocity);
         }
 
         //update video playback
         console.log(targetPosition, currentPosition, velocity);
-        videoElement[0].currentTime = (currentPosition * pixelDuration) / 1000;
+        videoElement[0].currentTime = ((currentPosition * pixelDuration) / 1000).toFixed(2);
     }
 
 });
